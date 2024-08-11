@@ -1,11 +1,12 @@
 import ClubsList from "../components/admin/ClubsList";
-import AdminAnnouncements from "../components/admin/AdminAnnouncements";
 import CreateData from "../components/admin/CreateData";
 import UploadFile from "../components/admin/UploadFile";
+import Header from "../components/authentication/Header";
 
 const AdminHome = () => {
     return (
         <div className="bg-yellow-100 min-h-full p-4">
+            <div><Header /></div>
             <div className="mb-4">
                 <ClubsList />
             </div>
@@ -17,9 +18,7 @@ const AdminHome = () => {
                     <UploadFile />
                 </div>
             </div>
-            <div className="mb-4">
-                <AdminAnnouncements />
-            </div>
+            
         </div>
     );
     

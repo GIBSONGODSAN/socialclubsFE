@@ -5,6 +5,7 @@ import EventsList from './EventsList';
 const ClubsList = () => {
     const [clubs, setClubs] = useState([]);
     const [selectedEvents, setSelectedEvents] = useState([]);
+    const [eventTypes, setEventTypes] = useState([]);
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -21,56 +22,78 @@ const ClubsList = () => {
     }, []);
 
     const handleClubClick = (clubID) => {
-        // Clear previous events and error before making a new request
         setSelectedEvents([]);
         setError('');
-
-        // Fetch events data when a club is clicked
-        axios.get(`http://127.0.0.1:8000/api/event/?clubId=${clubID}`)
-            .then(response => {
-                if (response.status === 200 && response.data) {
-                    console.log('Events fetched successfully:', response.data.data);
-                    setSelectedEvents(response.data.data);
-                } else {
-                    console.error('Unexpected response structure:', response);
-                    setError('Unexpected response from server.');
-                }
-            })
-            .catch(err => {
-                console.error('Error fetching events:', err);
-                if (err.response) {
-                    // Server responded with a status other than 200 range
-                    console.error('Server responded with:', err.response);
-                    setError(`Error fetching events: ${err.response.statusText}`);
-                } else if (err.request) {
-                    // Request was made but no response was received
-                    console.error('No response received:', err.request);
-                    setError('No response received from server.');
-                } else {
-                    // Something happened in setting up the request
-                    console.error('Error in request setup:', err.message);
-                    setError('Error setting up request.');
-                }
-            });
+        setEventTypes([]);
+    
+        const handleError = (err, defaultErrorMessage) => {
+            console.error(defaultErrorMessage, err);
+            if (err.response) {
+                setError(`Error: ${err.response.statusText}`);
+            } else if (err.request) {
+                setError('No response received from server.');
+            } else {
+                setError('Error setting up request.');
+            }
+        };
+    
+        // Execute both requests concurrently
+        Promise.all([
+            axios.get(`http://127.0.0.1:8000/api/event/?clubId=${clubID}`),
+            axios.get(`http://127.0.0.1:8000/api/eventtypes/?clubId=${clubID}`)
+        ])
+        .then(([eventsResponse, eventTypesResponse]) => {
+            if (eventsResponse.status === 200 && Array.isArray(eventsResponse.data.data)) {
+                setSelectedEvents(eventsResponse.data.data);
+                console.log('Events fetched successfully:', eventsResponse.data.data);
+            } else {
+                setError('Unexpected response from server for events.');
+            }
+    
+            if (eventTypesResponse.status === 200 && Array.isArray(eventTypesResponse.data.data)) {
+                setEventTypes(eventTypesResponse.data.data);
+                console.log('Event types fetched successfully:', eventTypesResponse.data.data);
+            } else {
+                setError('Unexpected response from server for event types.');
+            }
+        })
+        .catch(err => handleError(err, 'Error fetching data:'));
     };
 
     return (
-        <div className="p-4 border border-blue-500 rounded-md bg-white">
-            <h2 className="text-xl font-bold mb-4">Clubs and Events</h2>
-            {error && <p className="text-red-500">{error}</p>}
-            <div className="flex flex-wrap space-x-2 mb-4">
-                {clubs.map(club => (
-                    <button
-                        key={club.id}
-                        onClick={() => handleClubClick(club.id)}
-                        className="bg-blue-900 text-white px-4 py-2 rounded-md mb-2"
-                    >
-                        {club.clubname}
-                    </button>
-                ))}
-            </div>
+        <div>
+            <div className="p-4 border border-blue-500 rounded-md bg-white">
 
-            {selectedEvents.length > 0 && <EventsList events={selectedEvents} />}
+                <h2 className="text-xl font-bold mb-4">Clubs and Events</h2>
+
+                {error && <p className="text-red-500">{error}</p>}
+                <div className="flex flex-wrap space-x-2 mb-4">
+                    {clubs.map(club => (
+                        <button
+                            key={club.id}
+                            onClick={() => handleClubClick(club.id)}
+                            className="bg-blue-900 text-white px-4 py-2 rounded-md mb-2"
+                        >
+                            {club.clubname}
+                        </button>
+                    ))}
+                </div>
+
+                {eventTypes.length > 0 ? (
+                    <ul>
+                        {eventTypes.map((eventType, index) => (
+                            <li key={index}>
+                                {eventType.eventType}: {eventType.count}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>No event types available.</p>
+                )}
+                {error && <p className="error">{error}</p>}
+
+                {selectedEvents.length > 0 && <EventsList events={selectedEvents} />}
+            </div>
         </div>
     );
 };

@@ -23,11 +23,12 @@ const Login = () => {
         
         try {
             const response = await axios.post(loginUrl, { email, password });
-            const { data } = response.data;
-
+            const { session, data } = response.data;
+            console.log('Login response:', response.data.session);
             // Handle the response based on the role and email type
             if (studentEmailRegex.test(email)) {
                 if (data.role === 'student' || data.role === 'OB') {
+                    localStorage.setItem('authToken', session.token);
                     localStorage.setItem('studentId', data.id);
                     localStorage.setItem('clubId', data.ClubId);
                     window.location.href = data.role === 'student' ? '/studentpage' : '/obfaculty';
@@ -36,10 +37,12 @@ const Login = () => {
                 }
             } else {
                 if (data.role === 'HOC') {
+                    localStorage.setItem('authToken', session.token);
                     window.location.href = '/adminhome';
                 } else if (data.role === 'faculty') {
+                    localStorage.setItem('authToken', session.token);
                     localStorage.setItem('facultyId', data.id);
-                    localStorage.setItem('clubId', data.ClubId);
+                    localStorage.setItem('clubId', data.clubId);
                     window.location.href = '/obfaculty';
                 } else {
                     setError('Login failed. Please check your credentials.');

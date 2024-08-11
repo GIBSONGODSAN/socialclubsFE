@@ -27,7 +27,8 @@ const PostAnnouncement = () => {
       });
 
     // Fetch event data
-    axios.get(`http://127.0.0.1:8000/api/event/?clubId=${clubId}`)
+    if(selectedBatchId) {
+    axios.get(`http://127.0.0.1:8000/api/event/?clubId=${clubId}&batchId=${selectedBatchId}`)
       .then(response => {
         if (response.data.status.code === 200) {
           setEvents(response.data.data);
@@ -38,7 +39,10 @@ const PostAnnouncement = () => {
       .catch(error => {
         setError('An error occurred while fetching events');
       });
-  }, [clubId]);
+  } else {
+    setEvents([]);
+  } 
+  }, [clubId, selectedBatchId]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

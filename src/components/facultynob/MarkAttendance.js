@@ -26,20 +26,25 @@ const MarkAttendance = () => {
       .catch(() => {
         setError('An error occurred while fetching batches');
       });
-
-    // Fetch event data
-    axios.get(`http://127.0.0.1:8000/api/event/?clubId=${clubId}`)
-      .then(response => {
-        if (response.data.status.code === 200) {
-          setEvents(response.data.data);
-        } else {
-          setError('Failed to fetch events');
-        }
-      })
-      .catch(() => {
-        setError('An error occurred while fetching events');
-      });
-  }, [clubId]);
+  
+    // Fetch event data only if selectedBatchId is available
+    if (selectedBatchId) {
+      axios.get(`http://127.0.0.1:8000/api/event/?clubId=${clubId}&batchId=${selectedBatchId}`)
+        .then(response => {
+          if (response.data.status.code === 200) {
+            setEvents(response.data.data);
+          } else {
+            setError('Failed to fetch events');
+          }
+        })
+        .catch(() => {
+          setError('An error occurred while fetching events');
+        });
+    } else {
+      setEvents([]); // Clear events if no batch is selected
+    }
+  }, [clubId, selectedBatchId]);  // Adding selectedBatchId to the dependency array
+  
 
   const fetchStudents = (batchId) => {
     axios.post('http://127.0.0.1:8000/api/studentlist/', { ClubId: clubId, BatchId: batchId })

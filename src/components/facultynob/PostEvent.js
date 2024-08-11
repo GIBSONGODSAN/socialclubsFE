@@ -3,10 +3,13 @@ import axios from 'axios';
 
 const PostEvent = () => {
   const [years, setYears] = useState([]);
-  const [batches, setBatches] = useState([]);
+  const [collaborators, setCollaborators] = useState([]);
+  const [allBatches, setAllBatches] = useState([]);
   const [selectedYearId, setSelectedYearId] = useState('');
-  const [selectedBatchId, setSelectedBatchId] = useState('');
+  const [selectedCollaborators, setSelectedCollaborators] = useState([]);
+  const [selectedBatches, setSelectedBatches] = useState([]);
   const [eventName, setEventName] = useState('');
+  const [eventType, setEventType] = useState('');
   const [eventDate, setEventDate] = useState('');
   const [eventTime, setEventTime] = useState('');
   const [eventVenue, setEventVenue] = useState('');
@@ -18,7 +21,6 @@ const PostEvent = () => {
   const clubId = localStorage.getItem('clubId');
 
   useEffect(() => {
-    // Fetch year data
     axios.get('http://127.0.0.1:8000/api/yeardata/')
       .then(response => {
         if (response.data.status.code === 200) {
@@ -31,11 +33,22 @@ const PostEvent = () => {
         setError('An error occurred while fetching years');
       });
 
-    // Fetch batch data
+    axios.get('http://127.0.0.1:8000/api/club/')
+      .then(response => {
+        if (response.data.status.code === 200) {
+          setCollaborators(response.data.data);
+        } else {
+          setError('Failed to fetch collaborators');
+        }
+      })
+      .catch(() => {
+        setError('An error occurred while fetching collaborators');
+      });
+
     axios.get('http://127.0.0.1:8000/api/batch/')
       .then(response => {
         if (response.data.status.code === 200) {
-          setBatches(response.data.data);
+          setAllBatches(response.data.data);
         } else {
           setError('Failed to fetch batches');
         }
@@ -48,7 +61,7 @@ const PostEvent = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (!selectedYearId || !selectedBatchId || !eventName || !eventDate || !eventTime || !eventVenue || !eventDescription) {
+    if (!selectedYearId || !selectedCollaborators.length || !selectedBatches.length || !eventName || !eventDate || !eventTime || !eventVenue || !eventDescription || !numberOfHours || eventType === '') {
       setError('All fields are required');
       return;
     }
@@ -56,13 +69,15 @@ const PostEvent = () => {
     const data = {
       clubId: clubId,
       yearId: selectedYearId,
-      batchID: selectedBatchId,
       eventName: eventName,
+      eventType: eventType,
       eventDate: eventDate,
       eventTime: eventTime,
       eventVenue: eventVenue,
       numberOfHours: numberOfHours,
-      eventDescription: eventDescription
+      eventDescription: eventDescription,
+      collaborators: selectedCollaborators,
+      allBatches: selectedBatches
     };
 
     axios.post('http://127.0.0.1:8000/api/event/', data)
@@ -79,6 +94,16 @@ const PostEvent = () => {
         setSuccess(null);
         setError('An error occurred while posting the event');
       });
+  };
+
+  const handleCollaboratorChange = (e) => {
+    const selected = Array.from(e.target.selectedOptions, option => option.value);
+    setSelectedCollaborators(selected);
+  };
+
+  const handleBatchChange = (e) => {
+    const selected = Array.from(e.target.selectedOptions, option => option.value);
+    setSelectedBatches(selected);
   };
 
   return (
@@ -108,21 +133,38 @@ const PostEvent = () => {
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">
-                Select Batch:
+                Select Clubs:
               </label>
               <select
+                multiple
                 className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                value={selectedBatchId}
-                onChange={(e) => setSelectedBatchId(e.target.value)}
+                value={selectedCollaborators}
+                onChange={handleCollaboratorChange}
               >
-                <option value="">--Choose a batch--</option>
-                {batches.map((batch) => (
-                  <option key={batch.id} value={batch.id}>
-                    {batch.batchYear}
+                {collaborators.map((club) => (
+                  <option key={club.id} value={club.id}>
+                    {club.clubname}
                   </option>
                 ))}
               </select>
             </div>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-bold mb-2">
+              Select Batches:
+            </label>
+            <select
+              multiple
+              className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              value={selectedBatches}
+              onChange={handleBatchChange}
+            >
+              {allBatches.map((batch) => (
+                <option key={batch.id} value={batch.id}>
+                  {batch.batchYear}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="mb-4">
@@ -136,6 +178,26 @@ const PostEvent = () => {
                 onChange={(e) => setEventName(e.target.value)}
                 required
               />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 font-bold mb-2">
+                Event Type:
+              </label>
+              <select
+                className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                value={eventType}
+                onChange={(e) => setEventType(e.target.value)}
+                required
+              >
+                <option value="">--Choose an event type--</option>
+                <option value="Training">Training</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Seminar">Seminar</option>
+                <option value="Community Service">Community Service</option>
+                <option value="Volunter Service">Volunter Service</option>
+                <option value="Camp">Camp</option>
+                <option value="Outreach">Outreach</option>
+              </select>
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">
@@ -185,7 +247,6 @@ const PostEvent = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               value={numberOfHours}
               onChange={(e) => setEventHours(e.target.value)}
-              required
             />
           </div>
           <div className="mb-4">
@@ -201,10 +262,10 @@ const PostEvent = () => {
           </div>
           <div className="flex items-center justify-between">
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-              Submit
+              Post Event
             </button>
           </div>
         </form>
