@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import EventsList from './EventsList';
+import { urls } from '../authentication/urls'
 
 const ClubsList = () => {
     const [clubs, setClubs] = useState([]);
@@ -10,7 +11,7 @@ const ClubsList = () => {
 
     useEffect(() => {
         // Fetch clubs data on component mount
-        axios.get('http://127.0.0.1:8000/api/club/')
+        axios.get(`${urls.BASE_URL}/club/`)
             .then(response => {
                 console.log('Clubs fetched successfully:', response.data);
                 setClubs(response.data.data);
@@ -39,8 +40,8 @@ const ClubsList = () => {
     
         // Execute both requests concurrently
         Promise.all([
-            axios.get(`http://127.0.0.1:8000/api/event/?clubId=${clubID}`),
-            axios.get(`http://127.0.0.1:8000/api/eventtypes/?clubId=${clubID}`)
+            axios.get(`${urls.BASE_URL}/event/?clubId=${clubID}`),
+            axios.get(`${urls.BASE_URL}/eventtypes/?clubId=${clubID}`)
         ])
         .then(([eventsResponse, eventTypesResponse]) => {
             if (eventsResponse.status === 200 && Array.isArray(eventsResponse.data.data)) {

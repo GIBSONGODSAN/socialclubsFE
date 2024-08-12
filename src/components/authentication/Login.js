@@ -3,6 +3,7 @@ import axios from 'axios';
 import '../../index.css';
 import licet from '../../assets/licet.png';
 import licetcollege from '../../assets/licetcollege.png';
+import { urls } from '../authentication/urls'
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -18,8 +19,8 @@ const Login = () => {
 
         // Define the appropriate URL based on the email type
         const loginUrl = studentEmailRegex.test(email)
-            ? 'http://127.0.0.1:8000/api/student/signin/'
-            : 'http://127.0.0.1:8000/api/login/';
+            ? `${urls.BASE_URL}/student/signin/`
+            : `${urls.BASE_URL}/login/`;
         
         try {
             const response = await axios.post(loginUrl, { email, password });

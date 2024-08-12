@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { urls } from '../authentication/urls'
 
 const CreateData = () => {
   const [selectedOption, setSelectedOption] = useState('');
@@ -11,7 +12,7 @@ const CreateData = () => {
 
   useEffect(() => {
     // Fetch faculty list on component mount
-    axios.get('http://127.0.0.1:8000/api/facultylist/')
+    axios.get(`${urls.BASE_URL}/facultylist/`)
       .then(response => {
         if (response.data.status.code === 200) {
           setFacultyList(response.data.data);
@@ -31,15 +32,15 @@ const CreateData = () => {
 
     switch (selectedOption) {
       case 'year':
-        url = 'http://127.0.0.1:8000/api/yeardata/';
+        url = `${urls.BASE_URL}/yeardata/`;
         data = { year: parseInt(inputValue, 10) };
         break;
       case 'club':
-        url = 'http://127.0.0.1:8000/api/club/';
+        url = `${urls.BASE_URL}/club/`;
         data = { clubname: inputValue, facultyID };
         break;
       case 'batch':
-        url = 'http://127.0.0.1:8000/api/batch/';
+        url = `${urls.BASE_URL}/batch/`;
         data = { batchYear: inputValue };
         break;
       default:

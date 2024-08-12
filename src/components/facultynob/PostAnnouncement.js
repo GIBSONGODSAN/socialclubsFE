@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { urls } from '../authentication/urls'
 
 const PostAnnouncement = () => {
   const [batches, setBatches] = useState([]);
@@ -14,7 +15,7 @@ const PostAnnouncement = () => {
 
   useEffect(() => {
     // Fetch batch data
-    axios.get('http://127.0.0.1:8000/api/batch/')
+    axios.get(`${urls.BASE_URL}/batch/`)
       .then(response => {
         if (response.data.status.code === 200) {
           setBatches(response.data.data);
@@ -28,7 +29,7 @@ const PostAnnouncement = () => {
 
     // Fetch event data
     if(selectedBatchId) {
-    axios.get(`http://127.0.0.1:8000/api/event/?clubId=${clubId}&batchId=${selectedBatchId}`)
+    axios.get(`${urls.BASE_URL}/event/?clubId=${clubId}&batchId=${selectedBatchId}`)
       .then(response => {
         if (response.data.status.code === 200) {
           setEvents(response.data.data);
@@ -59,7 +60,7 @@ const PostAnnouncement = () => {
       announcement: announcement
     };
 
-    axios.post('http://127.0.0.1:8000/api/announcements/', data)
+    axios.post('${urls.BASE_URL}/announcements/', data)
       .then(response => {
         if (response.status === 201) {
           setSuccess('Announcement posted successfully!');

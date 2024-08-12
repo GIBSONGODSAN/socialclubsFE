@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { urls } from '../authentication/urls'
 
 const BloodGroup = () => {
     const [batches, setBatches] = useState([]);
@@ -11,7 +12,7 @@ const BloodGroup = () => {
 
     useEffect(() => {
         // Fetch batch options
-        axios.get('http://127.0.0.1:8000/api/batch/')
+        axios.get(`${urls.BASE_URL}/batch/`)
             .then(response => {
                 setBatches(response.data.data);
             })
@@ -33,7 +34,7 @@ const BloodGroup = () => {
         if (selectedBatch && clubId && bloodGroup) {
             const encodedBloodGroup = encodeURIComponent(bloodGroup);
             // Fetch student data based on selected batch, club, and blood group
-            axios.get(`http://127.0.0.1:8000/api/bloodgroups/?batchId=${selectedBatch}&clubId=${clubId}&bloodGroup=${encodedBloodGroup}`)
+            axios.get(`${urls.BASE_URL}/bloodgroups/?batchId=${selectedBatch}&clubId=${clubId}&bloodGroup=${encodedBloodGroup}`)
                 .then(response => {
                     setStudentData(response.data.data);
                 })

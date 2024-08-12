@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { urls } from '../authentication/urls'
 
 const EventStudentsList = () => {
     const [events, setEvents] = useState([]);
@@ -10,7 +11,7 @@ const EventStudentsList = () => {
         const fetchEvents = async () => {
             const clubId = localStorage.getItem('clubId'); // Retrieve clubId from local storage
             try {
-                const eventResponse = await axios.get(`http://127.0.0.1:8000/api/eventclubs/?clubId=${clubId}`);
+                const eventResponse = await axios.get(`${urls.BASE_URL}/eventclubs/?clubId=${clubId}`);
                 setEvents(eventResponse.data.data);
             } catch (error) {
                 console.error('Error fetching events:', error);
@@ -25,7 +26,7 @@ const EventStudentsList = () => {
             if (selectedEventId) {
                 const clubId = localStorage.getItem('clubId'); // Retrieve clubId from local storage
                 try {
-                    const studentResponse = await axios.get(`http://127.0.0.1:8000/api/eventstudents/?eventId=${selectedEventId}&clubId=${clubId}`);
+                    const studentResponse = await axios.get(`${urls.BASE_URL}/eventstudents/?eventId=${selectedEventId}&clubId=${clubId}`);
                     setStudents(studentResponse.data.data);
                 } catch (error) {
                     console.error('Error fetching students:', error);

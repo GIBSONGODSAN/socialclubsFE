@@ -5,8 +5,9 @@ import Header from "../components/authentication/Header";
 
 const AdminHome = () => {
     return (
-        <div className="bg-yellow-100 min-h-full p-4">
+        <div>
             <div><Header /></div>
+       <div className="bg-yellow-100 min-h-full p-4">
             <div className="mb-4">
                 <ClubsList />
             </div>
@@ -18,8 +19,8 @@ const AdminHome = () => {
                     <UploadFile />
                 </div>
             </div>
-            
         </div>
+        </div> 
     );
     
 };

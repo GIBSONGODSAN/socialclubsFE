@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { urls } from '../authentication/urls'
 
 const UploadFile = () => {
   const [batches, setBatches] = useState([]);
@@ -12,7 +13,7 @@ const UploadFile = () => {
 
   useEffect(() => {
     // Fetch batch data
-    axios.get('http://127.0.0.1:8000/api/batch/')
+    axios.get(`${urls.BASE_URL}/batch/`)
       .then(response => {
         if (response.data.status.code === 200) {
           setBatches(response.data.data);
@@ -25,7 +26,7 @@ const UploadFile = () => {
       });
 
     // Fetch club data
-    axios.get('http://127.0.0.1:8000/api/club/')
+    axios.get(`${urls.BASE_URL}/club/`)
       .then(response => {
         if (response.data.status.code === 200) {
           setClubs(response.data.data);
@@ -55,7 +56,7 @@ const UploadFile = () => {
     formData.append('ClubId', selectedClubId);
     formData.append('file', file);
 
-    axios.post('http://127.0.0.1:8000/api/uploadfile/', formData, {
+    axios.post(`${urls.BASE_URL}/uploadfile/`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

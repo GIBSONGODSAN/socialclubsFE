@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { urls } from '../authentication/urls'
 
 const UpcomingEvents = () => {
   const [events, setEvents] = useState([]);
@@ -8,7 +9,7 @@ const UpcomingEvents = () => {
   useEffect(() => {
     const clubId = localStorage.getItem('clubId');
 
-    axios.get(`http://127.0.0.1:8000/api/upcomingevents/?clubId=${clubId}`)
+    axios.get(`${urls.BASE_URL}/upcomingevents/?clubId=${clubId}`)
       .then(response => {
         if (response.data.status.code === 200) {
           setEvents(response.data.data);

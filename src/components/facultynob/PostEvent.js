@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { urls } from '../authentication/urls'
 
 const PostEvent = () => {
   const [years, setYears] = useState([]);
@@ -21,7 +22,7 @@ const PostEvent = () => {
   const clubId = localStorage.getItem('clubId');
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/yeardata/')
+    axios.get(`${urls.BASE_URL}/yeardata/`)
       .then(response => {
         if (response.data.status.code === 200) {
           setYears(response.data.data);
@@ -33,7 +34,7 @@ const PostEvent = () => {
         setError('An error occurred while fetching years');
       });
 
-    axios.get('http://127.0.0.1:8000/api/club/')
+    axios.get(`${urls.BASE_URL}/club/`)
       .then(response => {
         if (response.data.status.code === 200) {
           setCollaborators(response.data.data);
@@ -45,7 +46,7 @@ const PostEvent = () => {
         setError('An error occurred while fetching collaborators');
       });
 
-    axios.get('http://127.0.0.1:8000/api/batch/')
+    axios.get(`${urls.BASE_URL}/batch/`)
       .then(response => {
         if (response.data.status.code === 200) {
           setAllBatches(response.data.data);
@@ -80,7 +81,7 @@ const PostEvent = () => {
       allBatches: selectedBatches
     };
 
-    axios.post('http://127.0.0.1:8000/api/event/', data)
+    axios.post(`${urls.BASE_URL}/event/`, data)
       .then(response => {
         if (response.status === 201) {
           setSuccess('Event posted successfully!');

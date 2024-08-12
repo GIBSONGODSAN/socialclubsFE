@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { urls } from '../authentication/urls'
 
 const StudentAnnouncements = () => {
   const [announcements, setAnnouncements] = useState([]);
@@ -8,7 +9,7 @@ const StudentAnnouncements = () => {
   useEffect(() => {
     const clubId = localStorage.getItem('clubId');
 
-    axios.get(`http://127.0.0.1:8000/api/upcomingannouncements/?clubId=${clubId}`)
+    axios.get(`${urls.BASE_URL}/upcomingannouncements/?clubId=${clubId}`)
       .then(response => {
         if (response.data.status.code === 200) {
           setAnnouncements(response.data.data);
@@ -29,14 +30,14 @@ const StudentAnnouncements = () => {
                 <thead>
                     <tr>
                         <th className="px-4 py-2 border-b border-gray-300">Announcement</th>
-                        <th className="px-4 py-2 border-b border-gray-300">Event Name</th>
+                        {/* <th className="px-4 py-2 border-b border-gray-300">Event Name</th> */}
                     </tr>
                 </thead>
                 <tbody>
                     {announcements.map((announcement) => (
                         <tr key={announcement.id} className="even:bg-gray-100">
                             <td className="px-4 py-2 border-b border-gray-300">{announcement.announcement}</td>
-                            <td className="px-4 py-2 border-b border-gray-300">{announcement.event_name}</td>
+                            {/* <td className="px-4 py-2 border-b border-gray-300">{announcement.event_name}</td> */}
                         </tr>
                     ))}
                 </tbody>

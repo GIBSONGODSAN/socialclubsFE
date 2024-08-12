@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Pie } from 'react-chartjs-2';
 import 'chart.js/auto';
 import profileIcon from '../../assets/profile-icon.jpg';
+import { urls } from '../authentication/urls'
 
 const ViewAttendance = () => {
   const [studentData, setStudentData] = useState(null);
@@ -16,14 +17,14 @@ const ViewAttendance = () => {
     if (clubId && studentId) {
       const fetchData = async () => {
         try {
-          const studentResponse = await axios.get(`http://127.0.0.1:8000/api/studentdata/?studentId=${studentId}`);
+          const studentResponse = await axios.get(`${urls.BASE_URL}/studentdata/?studentId=${studentId}`);
           if (studentResponse.data.status.code === 200) {
             setStudentData(studentResponse.data.data);
           } else {
             setError('Failed to fetch student data');
           }
 
-          const attendanceResponse = await axios.post('http://127.0.0.1:8000/api/viewattendance/', { clubId, studentId });
+          const attendanceResponse = await axios.post(`${urls.BASE_URL}/viewattendance/`, { clubId, studentId });
           if (attendanceResponse.data.status.code === 200) {
             setAttendanceData(attendanceResponse.data.data);
           } else {

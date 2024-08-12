@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { urls } from '../authentication/urls'
 
 const MarkAttendance = () => {
   const [batches, setBatches] = useState([]);
@@ -15,7 +16,7 @@ const MarkAttendance = () => {
 
   useEffect(() => {
     // Fetch batch data
-    axios.get('http://127.0.0.1:8000/api/batch/')
+    axios.get(`${urls.BASE_URL}/batch/`)
       .then(response => {
         if (response.data.status.code === 200) {
           setBatches(response.data.data);
@@ -29,7 +30,7 @@ const MarkAttendance = () => {
   
     // Fetch event data only if selectedBatchId is available
     if (selectedBatchId) {
-      axios.get(`http://127.0.0.1:8000/api/event/?clubId=${clubId}&batchId=${selectedBatchId}`)
+      axios.get(`${urls.BASE_URL}/event/?clubId=${clubId}&batchId=${selectedBatchId}`)
         .then(response => {
           if (response.data.status.code === 200) {
             setEvents(response.data.data);
@@ -47,7 +48,7 @@ const MarkAttendance = () => {
   
 
   const fetchStudents = (batchId) => {
-    axios.post('http://127.0.0.1:8000/api/studentlist/', { ClubId: clubId, BatchId: batchId })
+    axios.post(`${urls.BASE_URL}/studentlist/`, { ClubId: clubId, BatchId: batchId })
       .then(response => {
         if (response.data.status.code === 200) {
           setStudents(response.data.data);
@@ -81,7 +82,7 @@ const MarkAttendance = () => {
       StudentIds: selectedStudents
     };
 
-    axios.post('http://127.0.0.1:8000/api/markattendance/', data)
+    axios.post(`${urls.BASE_URL}/markattendance/`, data)
       .then(response => {
         if (response.status === 200) {
           setSuccess('Attendance marked successfully!');
