@@ -5,6 +5,9 @@ import AdminHome from './pages/AdminHome';
 import StudentPage from './pages/StudentPage';
 import OBFacultyPage from './pages/OBFacultyPage';
 import AuthGuard from './components/authentication/AuthGuard';
+import SignUp from './components/authentication/SignUp';
+import Otp from './components/authentication/Otp';
+import RegisterStudent from './components/authentication/RegisterStudent';
 
 function App() {
   return (
@@ -12,6 +15,9 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/otp" element={<Otp />} />
+          <Route path="/registerstudent" element={<RegisterStudent />} />
           <Route
             path="/adminhome"
             element={

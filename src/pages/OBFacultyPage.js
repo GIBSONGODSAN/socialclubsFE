@@ -4,6 +4,7 @@ import MarkAttendance from "../components/facultynob/MarkAttendance";
 import BloodGroup from "../components/facultynob/BloodGroup";
 import Header from "../components/authentication/Header";
 import EventStudentsList from "../components/facultynob/EventStudentsList";
+import SignUpForm from "../components/facultynob/SignUpForm";
 import '../App.css';
 
 const OBFacultyPage = () => {
@@ -28,6 +29,9 @@ const OBFacultyPage = () => {
                 <div className="flex-1 p-4 ml-4">
                     <EventStudentsList />
                 </div>
+            </div>
+            <div className="mb-4 mr-4 ml-4 bg-yellow-50">
+                <SignUpForm />
             </div>
         </div>
     );

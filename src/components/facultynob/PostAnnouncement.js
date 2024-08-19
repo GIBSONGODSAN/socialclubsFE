@@ -60,7 +60,7 @@ const PostAnnouncement = () => {
       announcement: announcement
     };
 
-    axios.post('${urls.BASE_URL}/announcements/', data)
+    axios.post(`${urls.BASE_URL}/announcements/`, data)
       .then(response => {
         if (response.status === 201) {
           setSuccess('Announcement posted successfully!');
