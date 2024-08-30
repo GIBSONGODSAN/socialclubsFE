@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { urls } from '../authentication/urls'
 
 const SignUpForm = () => {
     const [formData, setFormData] = useState({
@@ -30,7 +31,7 @@ const SignUpForm = () => {
       // Fetch batch options
       const fetchBatches = async () => {
         try {
-          const response = await axios.get('http://127.0.0.1:8000/api/batch/');
+          const response = await axios.get(`${urls.BASE_URL}/batch/`);
           setBatchOptions(response.data.data || []);
         } catch (error) {
           console.error('Failed to fetch batches:', error);
@@ -70,7 +71,7 @@ const SignUpForm = () => {
       };
   
       try {
-        await axios.post('http://127.0.0.1:8000/api/student/signup/', updatedFormData);
+        await axios.post(`${urls.BASE_URL}/student/signup/`, updatedFormData);
         // Handle successful response (e.g., show a success message or redirect)
         alert('Signup successful!');
       } catch (error) {

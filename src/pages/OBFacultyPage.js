@@ -5,6 +5,7 @@ import BloodGroup from "../components/facultynob/BloodGroup";
 import Header from "../components/authentication/Header";
 import EventStudentsList from "../components/facultynob/EventStudentsList";
 import SignUpForm from "../components/facultynob/SignUpForm";
+import QuotaForm from "../components/facultynob/QuotaForm";
 import '../App.css';
 
 const OBFacultyPage = () => {
@@ -32,6 +33,9 @@ const OBFacultyPage = () => {
             </div>
             <div className="mb-4 mr-4 ml-4 bg-yellow-50">
                 <SignUpForm />
+            </div>
+            <div className="mb-4 mr-4 ml-4 bg-yellow-50">
+                <QuotaForm />
             </div>
         </div>
     );
