@@ -7,7 +7,6 @@ const StudentPage = () => {
   return (
     <div><div><Header /></div>
     <div className="bg-yellow-100 min-h-full p-4">
-
     <div>
       <ViewAttendance />
     </div>

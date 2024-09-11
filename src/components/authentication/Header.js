@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import TemporaryDrawer from './Drawer';
 
 const Header = () => {
 
@@ -19,11 +20,10 @@ const Header = () => {
             <div className="text-xl font-semibold">
                 Students Welfare
             </div>
-            <button
-                onClick={handleLogout}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            <button onClick={handleLogout}
+                className="bg-red-600 text-white font-bold py-2 px-4 rounded"
             >
-                Logout
+                LOGOUT
             </button>
         </header>
     );
