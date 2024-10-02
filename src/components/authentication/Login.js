@@ -12,6 +12,10 @@ const Login = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate(); 
 
+    const handleNavigation = () => {
+        navigate('/signup');
+    };
+    
     const handleLogin = async (e) => {
         e.preventDefault();
         
@@ -67,7 +71,7 @@ const Login = () => {
                 <form onSubmit={handleLogin} className="flex-1 pr-8">
                     <h2 className="text-2xl font-bold mb-6">Sign in</h2>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Email/Username:</label>
+                        <label className="block text-white text-sm font-bold mb-2">Email/Username:</label>
                         <input 
                             type="email" 
                             value={email} 
@@ -77,7 +81,7 @@ const Login = () => {
                         />
                     </div>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                        <label className="block text-white text-sm font-bold mb-2">Password:</label>
                         <input 
                             type="password" 
                             value={password} 
@@ -88,7 +92,9 @@ const Login = () => {
                     </div>
                     {error && <p className="text-red-500 text-xs italic">{error}</p>}
                     <div className="mb-4">
-                        <a href="/signup" className="text-sm text-gray-600 hover:text-gray-800">Don't have an account? Click to create one</a>
+                        <button onClick={handleNavigation} className="text-sm text-blue-950 hover:text-gray-800">
+                            Don't have an account? Click to create one
+                        </button>
                     </div>
                     <button type="submit" className="bg-indigo-900 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                         SIGN IN
