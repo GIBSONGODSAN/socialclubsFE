@@ -14,7 +14,7 @@ const Login = () => {
         e.preventDefault();
         
         // Define the regex for student email
-        const studentEmailRegex = /^[a-z]+(\.\d{2}[a-z]{2,3})?@licet\.ac\.in$/;
+        const studentEmailRegex = /^[a-z]+(\.\d{2}[a-z]{2,3})@licet\.ac\.in$/;
         console.log('studentEmailRegex:', studentEmailRegex.test(email));
 
         // Define the appropriate URL based on the email type

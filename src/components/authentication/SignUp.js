@@ -17,7 +17,7 @@ const SignUpForm = () => {
   const [emailError, setEmailError] = useState('');
   const navigate = useNavigate();
 
-  const emailRegex = /^[a-z]+(\.\d{2}[a-z]{2,3})?@licet\.ac\.in$/;
+  const emailRegex = /^[a-z]+(\.\d{2}[a-z]{2,3})@licet\.ac\.in$/;
 
   const handleChange = (e) => {
     const { name, value } = e.target;

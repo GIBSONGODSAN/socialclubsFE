@@ -9,9 +9,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import StudentAnnouncements from '../student/StudentAnnouncements';
-import UpcomingEvents from '../student/UpcominEvents';
-import ViewAttendance from '../student/ViewAttendance';
 
 // import InboxIcon and MailIcon if you need them for the icons
 

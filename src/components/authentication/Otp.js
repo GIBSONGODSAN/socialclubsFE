@@ -18,7 +18,7 @@ const Otp = () => {
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-        const encodedEmail = encodeURIComponent(email);
+        // const encodedEmail = encodeURIComponent(email);
         const encodedOtp = encodeURIComponent(otp);
         const encodedFirstName = encodeURIComponent(storedFormData.first_name || '');
         const encodedLastName = encodeURIComponent(storedFormData.last_name || '');

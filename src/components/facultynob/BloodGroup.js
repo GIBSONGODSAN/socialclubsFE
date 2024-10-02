@@ -5,7 +5,7 @@ import { urls } from '../authentication/urls'
 const BloodGroup = () => {
     const [batches, setBatches] = useState([]);
     const [selectedBatch, setSelectedBatch] = useState('');
-    const [bloodGroups, setBloodGroups] = useState(['A+', 'B+', 'O+', 'AB+', 'A-', 'B-', 'O-', 'AB-']);
+    const bloodGroups = ['A+', 'B+', 'O+', 'AB+', 'A-', 'B-', 'O-', 'AB-']; // Removed setBloodGroups
     const [selectedBloodGroup, setSelectedBloodGroup] = useState('');
     const [studentData, setStudentData] = useState([]);
     const [error, setError] = useState('');
