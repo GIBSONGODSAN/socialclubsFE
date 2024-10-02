@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { urls } from './urls';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterStudent = () => {
   const storedFormData = JSON.parse(localStorage.getItem('FormData'));
+  const navigate = useNavigate(); 
   const [formData, setFormData] = useState({
     id: localStorage.getItem('id'),
     email: storedFormData.email,
@@ -96,7 +98,7 @@ const RegisterStudent = () => {
       console.log(updatedFormData);
       await axios.put(`${urls.BASE_URL}/student/signup/`, updatedFormData);
       // Handle successful response (e.g., show a success message or redirect)
-      window.location.href = '/';
+      navigate('/');
     } catch (error) {
       console.error('Signup error:', error.response?.data || error.message);
     } finally {

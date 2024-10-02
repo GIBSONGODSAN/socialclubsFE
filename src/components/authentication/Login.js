@@ -4,11 +4,13 @@ import '../../index.css';
 import licet from '../../assets/licet.png';
 import licetcollege from '../../assets/licetcollege.png';
 import { urls } from '../authentication/urls'
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate(); 
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -32,19 +34,19 @@ const Login = () => {
                     localStorage.setItem('authToken', session.token);
                     localStorage.setItem('studentId', data.id);
                     localStorage.setItem('clubId', data.ClubId);
-                    window.location.href = data.role === 'student' ? '/studentpage' : '/obfaculty';
+                    navigate(data.role === 'student' ? '/studentpage' : '/obfaculty');
                 } else {
                     setError('Login failed. Please check your credentials.');
                 }
             } else {
                 if (data.role === 'HOC') {
                     localStorage.setItem('authToken', session.token);
-                    window.location.href = '/adminhome';
+                    navigate('/adminhome');
                 } else if (data.role === 'faculty') {
                     localStorage.setItem('authToken', session.token);
                     localStorage.setItem('facultyId', data.id);
                     localStorage.setItem('clubId', data.clubId);
-                    window.location.href = '/obfaculty';
+                    navigate('/obfaculty');
                 } else {
                     setError('Login failed. Please check your credentials.');
                 }
