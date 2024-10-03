@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+
 import axios from 'axios';
 import EventsList from './EventsList';
 import { urls } from '../authentication/urls'
 
 const ClubsList = () => {
+    const token = localStorage.getItem('authToken');
     const [clubs, setClubs] = useState([]);
     const [selectedEvents, setSelectedEvents] = useState([]);
     const [eventTypes, setEventTypes] = useState([]);
@@ -11,7 +13,9 @@ const ClubsList = () => {
 
     useEffect(() => {
         // Fetch clubs data on component mount
-        axios.get(`${urls.BASE_URL}/club/`)
+        axios.get(`${urls.BASE_URL}/club/`, {
+            headers: { Authorization: `Bearer ${token}`}
+          })
             .then(response => {
                 console.log('Clubs fetched successfully:', response.data);
                 setClubs(response.data.data);
@@ -20,7 +24,7 @@ const ClubsList = () => {
                 console.error('Error fetching clubs:', err);
                 setError('Error fetching clubs.');
             });
-    }, []);
+    }, [token]);
 
     const handleClubClick = (clubID) => {
         setSelectedEvents([]);
@@ -40,8 +44,12 @@ const ClubsList = () => {
     
         // Execute both requests concurrently
         Promise.all([
-            axios.get(`${urls.BASE_URL}/event/?clubId=${clubID}`),
-            axios.get(`${urls.BASE_URL}/eventtypes/?clubId=${clubID}`)
+            axios.get(`${urls.BASE_URL}/event/?clubId=${clubID}`, {
+                headers: { Authorization: `Bearer ${token}`}
+              }),
+            axios.get(`${urls.BASE_URL}/eventtypes/?clubId=${clubID}`, {
+                headers: { Authorization: `Bearer ${token}`}
+              })
         ])
         .then(([eventsResponse, eventTypesResponse]) => {
             if (eventsResponse.status === 200 && Array.isArray(eventsResponse.data.data)) {

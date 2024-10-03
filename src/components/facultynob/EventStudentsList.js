@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import axios from 'axios';
 import { urls } from '../authentication/urls'
 
@@ -6,12 +7,14 @@ const EventStudentsList = () => {
     const [events, setEvents] = useState([]);
     const [students, setStudents] = useState([]);
     const [selectedEventId, setSelectedEventId] = useState('');
-
+    const token = localStorage.getItem('authToken');
     useEffect(() => {
         const fetchEvents = async () => {
             const clubId = localStorage.getItem('clubId'); // Retrieve clubId from local storage
             try {
-                const eventResponse = await axios.get(`${urls.BASE_URL}/eventclubs/?clubId=${clubId}`);
+                const eventResponse = await axios.get(`${urls.BASE_URL}/eventclubs/?clubId=${clubId}`, {
+                    headers: { Authorization: `Bearer ${token}`}
+                  });
                 setEvents(eventResponse.data.data);
             } catch (error) {
                 console.error('Error fetching events:', error);
@@ -19,14 +22,16 @@ const EventStudentsList = () => {
         };
 
         fetchEvents();
-    }, []);
+    }, [token]);
 
     useEffect(() => {
         const fetchStudents = async () => {
             if (selectedEventId) {
                 const clubId = localStorage.getItem('clubId'); // Retrieve clubId from local storage
                 try {
-                    const studentResponse = await axios.get(`${urls.BASE_URL}/eventstudents/?eventId=${selectedEventId}&clubId=${clubId}`);
+                    const studentResponse = await axios.get(`${urls.BASE_URL}/eventstudents/?eventId=${selectedEventId}&clubId=${clubId}`, {
+                        headers: { Authorization: `Bearer ${token}`}
+                      });
                     setStudents(studentResponse.data.data);
                 } catch (error) {
                     console.error('Error fetching students:', error);
@@ -35,7 +40,8 @@ const EventStudentsList = () => {
         };
 
         fetchStudents();
-    }, [selectedEventId]);
+    }, [selectedEventId, token]);
+
 
     return (
         <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg">

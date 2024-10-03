@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+
 import axios from 'axios';
 import { urls } from '../authentication/urls'
 
 const BloodGroup = () => {
+    const token = localStorage.getItem('authToken');
     const [batches, setBatches] = useState([]);
     const [selectedBatch, setSelectedBatch] = useState('');
     const bloodGroups = ['A+', 'B+', 'O+', 'AB+', 'A-', 'B-', 'O-', 'AB-']; // Removed setBloodGroups
@@ -12,14 +14,16 @@ const BloodGroup = () => {
 
     useEffect(() => {
         // Fetch batch options
-        axios.get(`${urls.BASE_URL}/batch/`)
+        axios.get(`${urls.BASE_URL}/batch/`, {
+            headers: { Authorization: `Bearer ${token}`}
+          })
             .then(response => {
                 setBatches(response.data.data);
             })
             .catch(err => {
                 setError('Error fetching batch data');
             });
-    }, []);
+    }, [token]);
 
     const handleBatchChange = (e) => {
         setSelectedBatch(e.target.value);
@@ -34,7 +38,9 @@ const BloodGroup = () => {
         if (selectedBatch && clubId && bloodGroup) {
             const encodedBloodGroup = encodeURIComponent(bloodGroup);
             // Fetch student data based on selected batch, club, and blood group
-            axios.get(`${urls.BASE_URL}/bloodgroups/?batchId=${selectedBatch}&clubId=${clubId}&bloodGroup=${encodedBloodGroup}`)
+            axios.get(`${urls.BASE_URL}/bloodgroups/?batchId=${selectedBatch}&clubId=${clubId}&bloodGroup=${encodedBloodGroup}`, {
+                headers: { Authorization: `Bearer ${token}`}
+              })
                 .then(response => {
                     setStudentData(response.data.data);
                 })

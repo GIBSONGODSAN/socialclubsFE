@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import axios from 'axios';
 import { urls } from '../authentication/urls'
 
@@ -18,11 +19,13 @@ const PostEvent = () => {
   const [eventDescription, setEventDescription] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-
+  const token = localStorage.getItem('authToken');
   const clubId = localStorage.getItem('clubId');
 
   useEffect(() => {
-    axios.get(`${urls.BASE_URL}/yeardata/`)
+    axios.get(`${urls.BASE_URL}/yeardata/`, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.data.status.code === 200) {
           setYears(response.data.data);
@@ -34,7 +37,9 @@ const PostEvent = () => {
         setError('An error occurred while fetching years');
       });
 
-    axios.get(`${urls.BASE_URL}/club/`)
+    axios.get(`${urls.BASE_URL}/club/`, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.data.status.code === 200) {
           setCollaborators(response.data.data);
@@ -46,7 +51,9 @@ const PostEvent = () => {
         setError('An error occurred while fetching collaborators');
       });
 
-    axios.get(`${urls.BASE_URL}/batch/`)
+    axios.get(`${urls.BASE_URL}/batch/`, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.data.status.code === 200) {
           setAllBatches(response.data.data);
@@ -57,7 +64,7 @@ const PostEvent = () => {
       .catch(() => {
         setError('An error occurred while fetching batches');
       });
-  }, []);
+  }, [token]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -81,7 +88,9 @@ const PostEvent = () => {
       allBatches: selectedBatches
     };
 
-    axios.post(`${urls.BASE_URL}/event/`, data)
+    axios.post(`${urls.BASE_URL}/event/`, data, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.status === 201) {
           setSuccess('Event posted successfully!');

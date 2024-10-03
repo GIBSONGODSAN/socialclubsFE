@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import axios from 'axios';
 import { urls } from '../authentication/urls'
 
@@ -10,12 +11,14 @@ const PostAnnouncement = () => {
   const [announcement, setAnnouncement] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-
+  const token = localStorage.getItem('authToken');
   const clubId = localStorage.getItem('clubId');
 
   useEffect(() => {
     // Fetch batch data
-    axios.get(`${urls.BASE_URL}/batch/`)
+    axios.get(`${urls.BASE_URL}/batch/`, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.data.status.code === 200) {
           setBatches(response.data.data);
@@ -29,7 +32,9 @@ const PostAnnouncement = () => {
 
     // Fetch event data
     if(selectedBatchId) {
-    axios.get(`${urls.BASE_URL}/event/?clubId=${clubId}&batchId=${selectedBatchId}`)
+    axios.get(`${urls.BASE_URL}/event/?clubId=${clubId}&batchId=${selectedBatchId}`, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.data.status.code === 200) {
           setEvents(response.data.data);
@@ -43,7 +48,8 @@ const PostAnnouncement = () => {
   } else {
     setEvents([]);
   } 
-  }, [clubId, selectedBatchId]);
+  }, [clubId, selectedBatchId,  token]);
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -60,7 +66,9 @@ const PostAnnouncement = () => {
       announcement: announcement
     };
 
-    axios.post(`${urls.BASE_URL}/announcements/`, data)
+    axios.post(`${urls.BASE_URL}/announcements/`, data, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.status === 201) {
           setSuccess('Announcement posted successfully!');

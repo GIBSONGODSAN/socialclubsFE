@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+
 import axios from 'axios';
 import { urls } from '../authentication/urls'
 
 const CreateData = () => {
+  const token = localStorage.getItem('authToken');
   const [selectedOption, setSelectedOption] = useState('');
   const [inputValue, setInputValue] = useState('');
   const [facultyID, setFacultyID] = useState('');
@@ -12,7 +14,9 @@ const CreateData = () => {
 
   useEffect(() => {
     // Fetch faculty list on component mount
-    axios.get(`${urls.BASE_URL}/facultylist/`)
+    axios.get(`${urls.BASE_URL}/facultylist/`, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.data.status.code === 200) {
           setFacultyList(response.data.data);
@@ -23,7 +27,7 @@ const CreateData = () => {
       .catch(() => {
         setError('An error occurred while fetching faculty list');
       });
-  }, []);
+  }, [token]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -48,7 +52,9 @@ const CreateData = () => {
         return;
     }
 
-    axios.post(url, data)
+    axios.post(url, data, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.status === 201) {
           setSuccess('Data submitted successfully!');

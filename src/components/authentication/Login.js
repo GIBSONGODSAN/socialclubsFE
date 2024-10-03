@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import axios from 'axios';
 import '../../index.css';
 import licet from '../../assets/licet.png';
@@ -71,7 +72,7 @@ const Login = () => {
                 <form onSubmit={handleLogin} className="flex-1 pr-8">
                     <h2 className="text-2xl font-bold mb-6">Sign in</h2>
                     <div className="mb-4">
-                        <label className="block text-white text-sm font-bold mb-2">Email/Username:</label>
+                        <label className="block text-gray-900 text-sm font-bold mb-2">Email/Username:</label>
                         <input 
                             type="email" 
                             value={email} 
@@ -81,7 +82,7 @@ const Login = () => {
                         />
                     </div>
                     <div className="mb-4">
-                        <label className="block text-white text-sm font-bold mb-2">Password:</label>
+                        <label className="block text-gray-900 text-sm font-bold mb-2">Password:</label>
                         <input 
                             type="password" 
                             value={password} 

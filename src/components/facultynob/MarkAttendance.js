@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import axios from 'axios';
 import { urls } from '../authentication/urls'
 
@@ -11,12 +12,14 @@ const MarkAttendance = () => {
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-
+  const token = localStorage.getItem('authToken');
   const clubId = localStorage.getItem('clubId');
 
   useEffect(() => {
     // Fetch batch data
-    axios.get(`${urls.BASE_URL}/batch/`)
+    axios.get(`${urls.BASE_URL}/batch/`, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.data.status.code === 200) {
           setBatches(response.data.data);
@@ -30,7 +33,9 @@ const MarkAttendance = () => {
   
     // Fetch event data only if selectedBatchId is available
     if (selectedBatchId) {
-      axios.get(`${urls.BASE_URL}/event/?clubId=${clubId}&batchId=${selectedBatchId}`)
+      axios.get(`${urls.BASE_URL}/event/?clubId=${clubId}&batchId=${selectedBatchId}`, {
+        headers: { Authorization: `Bearer ${token}`}
+      })
         .then(response => {
           if (response.data.status.code === 200) {
             setEvents(response.data.data);
@@ -44,11 +49,13 @@ const MarkAttendance = () => {
     } else {
       setEvents([]); // Clear events if no batch is selected
     }
-  }, [clubId, selectedBatchId]);  // Adding selectedBatchId to the dependency array
+  }, [clubId, selectedBatchId, token]);  // Adding selectedBatchId to the dependency array
   
 
   const fetchStudents = (batchId) => {
-    axios.post(`${urls.BASE_URL}/studentlist/`, { ClubId: clubId, BatchId: batchId })
+    axios.post(`${urls.BASE_URL}/studentlist/`, { ClubId: clubId, BatchId: batchId }, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.data.status.code === 200) {
           setStudents(response.data.data);
@@ -82,7 +89,9 @@ const MarkAttendance = () => {
       StudentIds: selectedStudents
     };
 
-    axios.post(`${urls.BASE_URL}/markattendance/`, data)
+    axios.post(`${urls.BASE_URL}/markattendance/`, data, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.status === 200) {
           setSuccess('Attendance marked successfully!');

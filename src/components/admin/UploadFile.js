@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+
 import axios from 'axios';
 import { urls } from '../authentication/urls'
 
 const UploadFile = () => {
+  const token = localStorage.getItem('authToken');
   const [batches, setBatches] = useState([]);
   const [clubs, setClubs] = useState([]);
   const [selectedBatchId, setSelectedBatchId] = useState('');
@@ -13,7 +15,9 @@ const UploadFile = () => {
 
   useEffect(() => {
     // Fetch batch data
-    axios.get(`${urls.BASE_URL}/batch/`)
+    axios.get(`${urls.BASE_URL}/batch/`, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.data.status.code === 200) {
           setBatches(response.data.data);
@@ -26,7 +30,9 @@ const UploadFile = () => {
       });
 
     // Fetch club data
-    axios.get(`${urls.BASE_URL}/club/`)
+    axios.get(`${urls.BASE_URL}/club/`, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.data.status.code === 200) {
           setClubs(response.data.data);
@@ -37,7 +43,7 @@ const UploadFile = () => {
       .catch(error => {
         setError('An error occurred while fetching clubs');
       });
-  }, []);
+  }, [token]);
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -58,7 +64,8 @@ const UploadFile = () => {
 
     axios.post(`${urls.BASE_URL}/uploadfile/`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`
       }
     })
       .then(response => {

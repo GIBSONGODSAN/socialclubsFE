@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import axios from 'axios';
 import { urls } from './urls';
 import { useNavigate } from 'react-router-dom';
@@ -51,7 +52,7 @@ const RegisterStudent = () => {
     if (formData.department && formData.BatchId) {
       const fetchClubs = async () => {
         try {
-          const response = await axios.get(`${urls.BASE_URL}/quota/?batchId=${formData.BatchId}&department=${formData.department}`);
+          const response = await axios.get(`${urls.BASE_URL}/get-quota/?batchId=${formData.BatchId}&department=${formData.department}`);
           setClubs(response.data.data || []);
         } catch (error) {
           console.error('Failed to fetch clubs:', error);
@@ -84,27 +85,38 @@ const RegisterStudent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+  
     // Format date of birth
     const formattedDob = formatDate(formData.dob);
-
+  
     // Update formData with the formatted DOB
     const updatedFormData = {
       ...formData,
       dob: formattedDob
     };
-
+  
     try {
-      console.log(updatedFormData);
-      await axios.put(`${urls.BASE_URL}/student/signup/`, updatedFormData);
-      // Handle successful response (e.g., show a success message or redirect)
-      navigate('/');
+      // Check if the quota is still available
+      const quotaResponse = await axios.get(
+        `${urls.BASE_URL}/get-quota/?batchId=${formData.BatchId}&department=${formData.department}`
+      );
+  
+      if (quotaResponse.data.available) {
+        // If quota is available, proceed with form submission
+        await axios.put(`${urls.BASE_URL}/student/signup/`, updatedFormData);
+        // Handle successful response (e.g., show a success message or redirect)
+        navigate('/');
+      } else {
+        // If quota is not available, alert the user to choose another option
+        alert('Selected club quota is no longer available. Please choose another option.');
+      }
     } catch (error) {
-      console.error('Signup error:', error.response?.data || error.message);
+      console.error('Error during submission or quota check:', error.response?.data || error.message);
     } finally {
       setIsSubmitting(false);
     }
   };
+  
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">

@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
+
 import axios from 'axios';
 import { urls } from '../authentication/urls'
 
 const StudentAnnouncements = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [error, setError] = useState(null);
-
+  const token = localStorage.getItem('authToken');
   useEffect(() => {
     const clubId = localStorage.getItem('clubId');
 
-    axios.get(`${urls.BASE_URL}/upcomingannouncements/?clubId=${clubId}`)
+    axios.get(`${urls.BASE_URL}/upcomingannouncements/?clubId=${clubId}`, {
+      headers: { Authorization: `Bearer ${token}`}
+    })
       .then(response => {
         if (response.data.status.code === 200) {
           setAnnouncements(response.data.data);
@@ -20,7 +23,7 @@ const StudentAnnouncements = () => {
       .catch(error => {
         setError('An error occurred while fetching announcements');
       });
-  }, []);
+  }, [token]);
 
   return (
     <div className="p-4 border border-yellow-200 rounded-md bg-white">

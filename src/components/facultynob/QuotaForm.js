@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
+import axios from 'axios';
 import { urls } from "../authentication/urls";
 
 const QuotaForm = () => {
+  const token = localStorage.getItem('authToken');
   const [batchId, setBatchId] = useState("");
   const [quotas, setQuotas] = useState([
     { department: "CSE", quota: 0 },
@@ -19,7 +21,9 @@ const QuotaForm = () => {
   useEffect(() => {
     const fetchBatches = async () => {
       try {
-        const response = await axios.get(`${urls.BASE_URL}/batch/`);
+        const response = await axios.get(`${urls.BASE_URL}/batch/`, {
+          headers: { Authorization: `Bearer ${token}`}
+        });
         setBatches(response.data.data);
         if (response.data.data.length > 0) {
           setBatchId(response.data.data[0].id);
@@ -31,7 +35,7 @@ const QuotaForm = () => {
     };
 
     fetchBatches();
-  }, []);
+  }, [token]);
 
   const handleQuotaChange = (index, value) => {
     const newQuotas = [...quotas];
@@ -48,6 +52,8 @@ const QuotaForm = () => {
         clubId,
         batchId,
         quotas,
+      }, {
+        headers: { Authorization: `Bearer ${token}`}
       });
 
       if (response.status === 200 || response.status === 201) {
