@@ -1,6 +1,6 @@
-FROM node:current-alpine
-
+FROM node:latest
+RUN apt-get update && apt-get install -y curl
 WORKDIR /app
 COPY . .
 RUN npm install
-CMD ["npm", "start"]
+EXPOSE 3000
