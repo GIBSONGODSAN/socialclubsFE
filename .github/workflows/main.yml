@@ -3,7 +3,7 @@ name: Build Licet Social Clubs Backend Docker Image
 on:
   push:
     branches:
-      - stage
+      - main
 
 env:
   DOCKER_BUILD_TOKEN: ${{ secrets.DOCKER_BUILD_TOKEN }}
