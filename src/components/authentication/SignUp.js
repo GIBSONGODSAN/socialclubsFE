@@ -18,7 +18,8 @@ const SignUpForm = () => {
   const [emailError, setEmailError] = useState('');
   const navigate = useNavigate();
 
-  const emailRegex = /^[a-z]+(\.\d{2}[a-z]{2,3})@licet\.ac\.in$/;
+  const studentEmailRegex = /^[a-z]+(\.\d{2}[a-z]{2,3})@licet\.ac\.in$/;
+  const facultyEmailRegex = /^[a-z]+(\.[a-z]{1,4})?@licet\.ac\.in$/;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,7 +37,7 @@ const SignUpForm = () => {
     e.preventDefault();
 
     // Validate email
-    if (emailRegex.test(formData.email)) {
+    if (studentEmailRegex.test(formData.email)) {
       localStorage.setItem('email', formData.email);
       localStorage.setItem('FormData', JSON.stringify(formData));
       try {
@@ -50,23 +51,30 @@ const SignUpForm = () => {
         console.error('OTP error:', error.response?.data || error.message);
       } finally {
         setIsSubmitting(false);
-      } } else {
-        try {
-          const response = await axios.post(`${urls.BASE_URL}/faculty/signup/`, formData);
-    
-          if (response.status === 201) {
-            navigate('/'); // Redirect to the home page or another route
-          } else {
-            console.error('Signup failed:', response.data);
-          }
-        } catch (error) {
-          console.error('Signup error:', error.response?.data || error.message);
-        } finally {
-          setIsSubmitting(false);
-        } }
-    console.log(emailRegex.test(formData.email));
+      setIsSubmitting(false);
+      }}
+    // Check for faculty email
+    else if (facultyEmailRegex.test(formData.email)) {
+      try {
+        const response = await axios.post(`${urls.BASE_URL}/faculty/signup/`, formData);
+  
+        if (response.status === 201) {
+          navigate('/'); // Redirect to the home page or another route
+        } else {
+          console.error('Signup failed:', response.data);
+        }
+      } catch (error) {
+        console.error('Signup error:', error.response?.data || error.message);
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      setEmailError('Invalid email format');
+      setIsSubmitting(false);
+    }
+    console.log("studentEmailRegex:", studentEmailRegex.test(formData.email));
+    console.log("facultyEmailRegex:", facultyEmailRegex.test(formData.email));
     setIsSubmitting(true);
-    
   };
 
   return (
